@@ -12,14 +12,14 @@ fn trim_me(input: &str) -> String {
 
 fn compose_me(input: &str) -> String {
     // TODO: Add " world!" to the string! There are multiple ways to do this!
-    let mut result = String::from(input);
-    result.push_str(" world!");
-    result
+    format!("{input} world!")
 }
 
 fn replace_me(input: &str) -> String {
     // TODO: Replace "cars" in the string with "balloons"!
-    ???
+    let mut input_string = String::from(input);
+    let input_string = input_string.replace("cars", "balloons");
+    input_string
 }
 
 #[cfg(test)]
