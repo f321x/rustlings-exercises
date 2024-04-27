@@ -12,6 +12,8 @@
 mod tests {
     #[test]
     fn you_can_assert_eq() {
-        assert_eq!();
+        let x = 21;
+        let y = 21;
+        assert_eq!(x, y);
     }
 }
