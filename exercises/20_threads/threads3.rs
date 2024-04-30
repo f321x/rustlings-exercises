@@ -26,19 +26,24 @@ impl Queue {
     }
 }
 
-fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
+fn send_tx(q: Arc<Queue>, tx: mpsc::Sender<u32>) -> () {
+    let q_clone1 = Arc::clone(&q);
+    let q_clone2: Arc<Queue> = Arc::clone(&q);
+    let tx1 = mpsc::Sender::clone(&tx);
+    let tx2 = mpsc::Sender::clone(&tx);
+
     thread::spawn(move || {
-        for val in q.first_half {
+        for val in &q_clone1.first_half {
             println!("sending {:?}", val);
-            tx.send(val).unwrap();
+            tx1.send(*val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
 
     thread::spawn(move || {
-        for val in q.second_half {
+        for val in &q_clone2.second_half {
             println!("sending {:?}", val);
-            tx.send(val).unwrap();
+            tx2.send(*val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
@@ -47,7 +52,7 @@ fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
 #[test]
 fn main() {
     let (tx, rx) = mpsc::channel();
-    let queue = Queue::new();
+    let queue = Arc::new(Queue::new());
     let queue_length = queue.length;
 
     send_tx(queue, tx);
